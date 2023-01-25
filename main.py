@@ -42,7 +42,8 @@ ticker = 'AAPL'
 
 
 # API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
-API_url = f'https://cloud.iexapis.com/stable/stock/aapl/quote?token={API_key}'
+API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
 
+print(API_url)
 Stock_data = rq.get(API_url)
 print(Stock_data)
