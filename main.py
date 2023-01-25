@@ -42,8 +42,8 @@ ticker = 'AAPL'
 
 
 # API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
-API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
+API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/chart?token={API_key}'
 
 print(API_url)
-Stock_data = rq.get(API_url)
+Stock_data = rq.get(API_url).raise_for_status()
 print(Stock_data)
