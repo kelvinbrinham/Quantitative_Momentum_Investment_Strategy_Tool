@@ -18,4 +18,16 @@ class Equity:
         self.__price = price
 
         #Append each equity (instances) to the universe
-        Equities.all.append(self)
+        Equity.universe.append(self)
+
+        #-----------------------------
+        #ADD INSTANTIATE FROM CSV HERE!!!
+        #-----------------------------
+
+    def __repr__(self):
+    #Representing instance nicely
+        return f"{self.__class__.__name__}('{self.__name}', '{self.__ticker}', {self.__price}, {self.__quantity})"
+
+
+Apple = Equity('Apple', 'AAPL', 66, 1)
+Orange = Equity('Orange', 'O', 56, 2)
