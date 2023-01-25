@@ -1,6 +1,8 @@
 # Quantitative_Momentum_Investment_Strategy_Machine
 ***WORK IN PROGRESS***
 
+I am working on this project through an interest in quantitative finance and as practice in OOP using python.
+
 I aim to create a quantitative momentum machine which finds the equities (in an input list) which have the highest good quality momentum and then outputs
 an investment strategy in the form of say and excel sheet. I do not aim to write code to execute the trades, only to create essentially an order sheet.
 This project will roughley proceed as follows (rough initial plan):
