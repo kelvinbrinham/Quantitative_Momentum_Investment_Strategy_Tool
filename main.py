@@ -2,9 +2,23 @@
 main
 '''
 
-#1. Import list of stocks we are interested in
+import numpy as np
+import pandas as pd
+import math as mth
+import requests as rq
+import linecache
 
-class Equities:
+# read fifth line
+
+
+# Importing API key from file as to keep it secret when i publish code
+API_key = linecache.getline(r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt', 10)
+
+
+
+#1. Import list of stocks we are interested in from S&P 500
+
+class Equity:
     universe = []
     def __init__(self, name: str, ticker: str, price: float, quantity = 0):
 
@@ -18,5 +32,5 @@ class Equities:
         self.__quantity = quantity
         self.__price = price
 
-        #Append each equities (instances) to the universe
+        #Append each equity (instances) to the universe
         Equities.all.append(self)
