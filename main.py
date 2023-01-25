@@ -20,7 +20,7 @@ API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API
 API_key = linecache.getline(API_key_file_path, 10).strip()
 #1. Import list of stocks we are interested in from s and p 500 csv file
 # i found online
-'''
+
 universe_df = pd.read_csv(r'S&P500_Stocks.csv')
 
 #List of Tickers from spreadsheet
@@ -34,15 +34,15 @@ for Ticker in Ticker_list:
 #TRIM TICKER LIST TO 1 STOCK FOR TESTING PURPOSES
 Ticker_list_stripped = Ticker_list_stripped[:1]
 
-print(Ticker_list_stripped)
 
 ticker = Ticker_list_stripped[0]
-'''
-ticker = 'AAPL'
-
 
 API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
 
 
-Stock_data = rq.get(API_url).json()
-print(Stock_data)
+#Perform the batch API request
+Stock_data_js = rq.get(API_url).json()
+print(Stock_data_js)
+
+month1ChangePercent = Stock_data_js['month1ChangePercent']
+print(month1ChangePercent)
