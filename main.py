@@ -19,21 +19,6 @@ API_key = linecache.getline(r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files
 
 
 
-#1. Import list of stocks we are interested in from S&P 500
-
-class Equity:
-    universe = []
-    def __init__(self, name: str, ticker: str, price: float, quantity = 0):
-
-        #Validate initialisation arguements
-        assert price >= 0, f'Price {price} is negative!'
-        assert quantity >= 0, f'Quantity {quantity} is negative!'
-
-        #Assign to self object
-        self.__name = name
-        self.__ticker = ticker
-        self.__quantity = quantity
-        self.__price = price
-
-        #Append each equity (instances) to the universe
-        Equities.all.append(self)
+#1. Import list of stocks we are interested in from Universe spreadsheet
+universe_df = pd.read_excel(r'/Users/kelvinbrinham/Desktop/Python_practice/Aperture_Task_1/Universe.xlsx')
+print(universe_df)
