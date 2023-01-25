@@ -9,6 +9,7 @@ import requests as rq
 import linecache
 from scipy import stats
 import json as js
+import datetime as dt
 
 
 # read fifth line
@@ -17,8 +18,27 @@ import json as js
 # Importing API key from file as to keep it secret when i publish code
 API_key = linecache.getline(r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt', 10)
 
+#1. Import list of stocks we are interested in from s and p 500 csv file
+# i found online
+universe_df = pd.read_csv(r'S&P500_Stocks.csv')
 
+#List of Tickers from spreadsheet
+Ticker_list = list(universe_df['Symbol'])
+Ticker_list_stripped = []
 
-#1. Import list of stocks we are interested in from Universe spreadsheet
-universe_df = pd.read_excel(r'/Users/kelvinbrinham/Desktop/Python_practice/Aperture_Task_1/Universe.xlsx')
-print(universe_df)
+#Strip the ticker symbols to the base tickers
+for Ticker in Ticker_list:
+    Ticker_list_stripped.append(Ticker.split()[0])
+
+#TRIM TICKER LIST TO 1 STOCK FOR TESTING PURPOSES
+Ticker_list_stripped = Ticker_list_stripped[:1]
+
+print(Ticker_list_stripped)
+
+ticker = Ticker_list_stripped[0]
+ticker = 'AAPL'
+date = dt.datetime.now()
+print(date)
+
+# Stock_data = rq.get(f'https://cloud.iexapis.com/stable/stock/{ticker}/balance-sheet?token={API_key}')
+Stock_data = rq.get(f'https://cloud.iexapis.com/stable/stock/{ticker}/balance-sheet?token={API_key}')
