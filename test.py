@@ -31,3 +31,7 @@ class Equity:
 
 Apple = Equity('Apple', 'AAPL', 66, 1)
 Orange = Equity('Orange', 'O', 56, 2)
+
+
+date = dt.datetime.now()
+print(date)

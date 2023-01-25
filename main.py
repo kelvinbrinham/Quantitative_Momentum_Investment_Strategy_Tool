@@ -20,6 +20,7 @@ API_key = linecache.getline(r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files
 
 #1. Import list of stocks we are interested in from s and p 500 csv file
 # i found online
+'''
 universe_df = pd.read_csv(r'S&P500_Stocks.csv')
 
 #List of Tickers from spreadsheet
@@ -36,9 +37,13 @@ Ticker_list_stripped = Ticker_list_stripped[:1]
 print(Ticker_list_stripped)
 
 ticker = Ticker_list_stripped[0]
+'''
 ticker = 'AAPL'
-date = dt.datetime.now()
-print(date)
+
+
+API_url = f'https://sandbox.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
 
 # Stock_data = rq.get(f'https://cloud.iexapis.com/stable/stock/{ticker}/balance-sheet?token={API_key}')
-Stock_data = rq.get(f'https://cloud.iexapis.com/stable/stock/{ticker}/balance-sheet?token={API_key}')
+Stock_data = rq.get(API_url)
+# print(f'{API_url}/stable/stock/{ticker}/stats/companyName?token={API_key}')
+print(Stock_data)
