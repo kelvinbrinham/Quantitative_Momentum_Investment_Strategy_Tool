@@ -16,8 +16,8 @@ import datetime as dt
 
 
 # Importing API key from file as to keep it secret when i publish code
-API_key = linecache.getline(r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt', 10)
-
+API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt'
+API_key = linecache.getline(API_key_file_path, 10).strip()
 #1. Import list of stocks we are interested in from s and p 500 csv file
 # i found online
 '''
@@ -41,9 +41,8 @@ ticker = Ticker_list_stripped[0]
 ticker = 'AAPL'
 
 
-# API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
-API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/chart?token={API_key}'
+API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
 
-print(API_url)
-Stock_data = rq.get(API_url).raise_for_status()
+
+Stock_data = rq.get(API_url).json()
 print(Stock_data)
