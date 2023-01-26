@@ -48,12 +48,13 @@ Ticker_strings_lst = []
 for i in range(len(Ticker_list_stripped_chunked)):
     Ticker_strings_lst.append(','.join(Ticker_list_stripped_chunked[i]))
 
+#Perform batch requests from API to retrieve data
+Stock_data_js_lst = []
 #Work with length 3 for now
-API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[0]}&types=stats&token={API_key}'
-
-Stock_data_js = rq.get(API_url).json()
-print(Stock_data_js)
-print(Stock_data_js['MMM']['stats'])
+for i in range(2):
+    API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats&token={API_key}'
+    Stock_data_js = rq.get(API_url).json()
+    Stock_data_js_lst.append(Stock_data_js)
 
 
 
