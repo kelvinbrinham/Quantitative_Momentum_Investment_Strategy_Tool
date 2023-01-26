@@ -12,8 +12,6 @@ import json as js
 import datetime as dt
 
 
-# read fifth line
-
 
 # Importing API key from file as to keep it secret when i publish code
 API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt'
@@ -66,8 +64,6 @@ for i in range(len(Stock_data_js_lst)):
 with open('Stock_data.json', 'w') as f:
     js.dump(Stock_data_js_lst, f)
 
-print(len(Stock_data_js_lst))
-print(len(Stock_data_js_lst[0]))
 
 
 '''
