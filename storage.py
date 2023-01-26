@@ -3,12 +3,10 @@ Storage
 '''
 
 
-API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
+#FLatten list
 
+lst_ = [[1,2], [3,4]]
 
-#Perform the batch API request
-Stock_data_js = rq.get(API_url).json()
-print(Stock_data_js)
+flat_lst = [item for sublist in lst_ for item in sublist]
 
-month1ChangePercent = Stock_data_js['month1ChangePercent']
-print(month1ChangePercent)
+print(flat_lst)
