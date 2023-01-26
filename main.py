@@ -50,7 +50,6 @@ API_symbol_lst = [x['symbol'] for x in list_of_tickers_supported_js]
 
 
 #Perform batch requests from API to retrieve data
-Stock_data_js_lst = []
 data_df_lst = []
 my_columns = ['Ticker', 'Price'] #ADD MORE COLUMNS LATER
 #Work with length 3 for now
