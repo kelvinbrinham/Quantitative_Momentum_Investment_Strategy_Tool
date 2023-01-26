@@ -63,14 +63,3 @@ for i in range(len(Stock_data_js_lst)):
 
 with open('Stock_data.json', 'w') as f:
     js.dump(Stock_data_js_lst, f)
-
-
-
-'''
-#Perform the batch API request
-print(Stock_data_js)
-print(Stock_data_js['MMM']['stats'])
-
-month1ChangePercent = Stock_data_js['MMM']['month1ChangePercent']
-print(month1ChangePercent)
-'''

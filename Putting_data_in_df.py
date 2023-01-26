@@ -19,6 +19,14 @@ Stock_data_js_lst = js.load(Stock_data_js_lst)
 #By creating a df for each stock and then concat at the end
 Stock_data_js_lst = Stock_data_js_lst[0]
 
+
+'''
+print(Stock_data_js_lst)
+print(Stock_data_js_lst['MMM'])
+print(Stock_data_js_lst['MMM']['stats'])
+print(Stock_data_js_lst['MMM']['stats']['marketcap'])
+'''
+
 #Put stock data into a df before analysis
 my_columns = ['Ticker', 'Price'] #ADD MORE COLUMNS LATER
 
