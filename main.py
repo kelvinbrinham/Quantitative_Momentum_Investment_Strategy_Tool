@@ -42,6 +42,13 @@ Ticker_strings_lst = []
 for i in range(len(Ticker_list_stripped_chunked)):
     Ticker_strings_lst.append(','.join(Ticker_list_stripped_chunked[i]))
 
+
+list_of_tickers_supported_f = open(f'list_of_tickers_supported.json')
+list_of_tickers_supported_js = js.load(list_of_tickers_supported_f)
+
+API_symbol_lst = [x['symbol'] for x in list_of_tickers_supported_js]
+
+
 #Perform batch requests from API to retrieve data
 Stock_data_js_lst = []
 data_df_lst = []
@@ -51,7 +58,10 @@ for i in range(len(Ticker_list_stripped_chunked)):
     API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats,quote&token={API_key}'
     Stock_data_js = rq.get(API_url).json()
     for ticker in Ticker_strings_lst[i].split(','):
-        Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice']]], columns=my_columns)
+        if ticker in API_symbol_lst:
+            Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice']]], columns=my_columns)
+        else:
+            Stock_df = pd.DataFrame([[ticker, 'N/A']], columns=my_columns)
         data_df_lst.append(Stock_df)
 
 

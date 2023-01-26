@@ -5,8 +5,8 @@ Storage
 
 #FLatten list
 
-lst_ = [[1,2], [3,4]]
+lst_ = [{'symbol': 'AAPL'}, {'symbol': 'TSLA'}]
 
-flat_lst = [item for sublist in lst_ for item in sublist]
+lst2 = [x['symbol'] for x in lst_]
 
-print(flat_lst)
+print(lst2)
