@@ -32,14 +32,21 @@ for Ticker in Ticker_list:
     Ticker_list_stripped.append(Ticker.split()[0])
 
 #TRIM TICKER LIST TO 1 STOCK FOR TESTING PURPOSES
-Ticker_list_stripped = Ticker_list_stripped[:3]
-print(Ticker_list_stripped)
+# Ticker_list_stripped = Ticker_list_stripped[:3]
 
 # ticker = Ticker_list_stripped[0]
 
 
 #Creating a batch request from API, IEX uses comma seperated string of Tickers
 #Creating a comma separated string of tickers from ticker list stripped
+
+#Create list of sub lists each 100 length so as not to create a batch request that is too long.
+chunk_length = 3
+Ticker_list_stripped_chunked = [Ticker_list_stripped[x:x+chunk_length] for x in range(0, len(Ticker_list_stripped), chunk_length)]
+
+
+
+#Work with length 3 for now
 
 
 # Ticker_string
