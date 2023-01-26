@@ -29,17 +29,13 @@ Ticker_list_stripped = []
 for Ticker in Ticker_list:
     Ticker_list_stripped.append(Ticker.split()[0])
 
-#TRIM TICKER LIST TO 1 STOCK FOR TESTING PURPOSES
-# Ticker_list_stripped = Ticker_list_stripped[:3]
-
-# ticker = Ticker_list_stripped[0]
 
 
 #Creating a batch request from API, IEX uses comma seperated string of Tickers
 #Creating a comma separated string of tickers from ticker list stripped
 
 #Create list of sub lists each 100 length so as not to create a batch request that is too long.
-chunk_length = 3
+chunk_length = 100
 Ticker_list_stripped_chunked = [Ticker_list_stripped[x:x+chunk_length] for x in range(0, len(Ticker_list_stripped), chunk_length)]
 
 Ticker_strings_lst = []
@@ -48,28 +44,16 @@ for i in range(len(Ticker_list_stripped_chunked)):
 
 #Perform batch requests from API to retrieve data
 Stock_data_js_lst = []
+data_df_lst = []
+my_columns = ['Ticker', 'Price'] #ADD MORE COLUMNS LATER
 #Work with length 3 for now
-for i in range(2):
+for i in range(len(Ticker_list_stripped_chunked)):
     API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats,quote&token={API_key}'
     Stock_data_js = rq.get(API_url).json()
-    Stock_data_js_lst.append(Stock_data_js)
+    for ticker in Ticker_strings_lst[i].split(','):
+        Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice']]], columns=my_columns)
+        data_df_lst.append(Stock_df)
 
 
-for i in range(len(Stock_data_js_lst)):
-    print(Stock_data_js_lst[i])
-
-#Save Stock_data_js_lst to file to avoid excessive API requests as i mess with putting it in a dataframe
-
-with open('Stock_data.json', 'w') as f:
-    js.dump(Stock_data_js_lst, f)
-
-
-
-'''
-#Perform the batch API request
-print(Stock_data_js)
-print(Stock_data_js['MMM']['stats'])
-
-month1ChangePercent = Stock_data_js['MMM']['month1ChangePercent']
-print(month1ChangePercent)
-'''
+data_df = pd.concat(data_df_lst, axis = 0, ignore_index = True)
+print(data_df)
