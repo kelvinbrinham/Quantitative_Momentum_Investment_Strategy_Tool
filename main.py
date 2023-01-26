@@ -48,6 +48,7 @@ Ticker_strings_lst = []
 for i in range(len(Ticker_list_stripped_chunked)):
     Ticker_strings_lst.append(','.join(Ticker_list_stripped_chunked[i]))
 
+
 #Perform batch requests from API to retrieve data
 Stock_data_js_lst = []
 #Work with length 3 for now

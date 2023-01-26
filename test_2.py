@@ -1,10 +1,8 @@
 '''
 test 2
 '''
+import pandas as pd
 
-a = 5
-print('OUT')
+from main import Stock_data_js_lst
 
-if __name__ == '__main__':
-    a = 10
-    print('IN')
+print(Stock_data_js_lst)
