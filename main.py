@@ -44,27 +44,25 @@ for Ticker in Ticker_list:
 chunk_length = 3
 Ticker_list_stripped_chunked = [Ticker_list_stripped[x:x+chunk_length] for x in range(0, len(Ticker_list_stripped), chunk_length)]
 
-
+Ticker_strings_lst = []
+for i in range(len(Ticker_list_stripped_chunked)):
+    Ticker_strings_lst.append(','.join(Ticker_list_stripped_chunked[i]))
 
 #Work with length 3 for now
+API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[0]}&types=stats&token={API_key}'
 
-
-# Ticker_string
-# API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_string}&types=stats?token={API_key}'
-
-'''
-1:58
-'''
-
-
-'''
-API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
-
-
-#Perform the batch API request
 Stock_data_js = rq.get(API_url).json()
 print(Stock_data_js)
+print(Stock_data_js['MMM']['stats'])
 
-month1ChangePercent = Stock_data_js['month1ChangePercent']
+
+
+
+'''
+#Perform the batch API request
+print(Stock_data_js)
+print(Stock_data_js['MMM']['stats'])
+
+month1ChangePercent = Stock_data_js['MMM']['month1ChangePercent']
 print(month1ChangePercent)
 '''
