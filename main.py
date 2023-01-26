@@ -51,20 +51,17 @@ Stock_data_js_lst = []
 #Work with length 3 for now
 for i in range(2):
     API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats,quote&token={API_key}'
-    Stock_data_js = rq.get(API_url).raise_for_status()
-    print(Stock_data_js)
-
-    # Stock_data_js = rq.get(API_url).json()
-    # Stock_data_js_lst.append(Stock_data_js)
+    Stock_data_js = rq.get(API_url).json()
+    Stock_data_js_lst.append(Stock_data_js)
 
 
-# for i in range(len(Stock_data_js_lst)):
-#     print(Stock_data_js_lst[i])
-#
-# #Save Stock_data_js_lst to file to avoid excessive API requests as i mess with putting it in a dataframe
-#
-# with open('Stock_data.json', 'w') as f:
-#     js.dump(Stock_data_js_lst, f)
+for i in range(len(Stock_data_js_lst)):
+    print(Stock_data_js_lst[i])
+
+#Save Stock_data_js_lst to file to avoid excessive API requests as i mess with putting it in a dataframe
+
+with open('Stock_data.json', 'w') as f:
+    js.dump(Stock_data_js_lst, f)
 
 
 

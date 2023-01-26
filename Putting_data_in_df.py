@@ -26,21 +26,20 @@ ticker_string = ','.join(ticker_lst)
 #Put stock data into a df before analysis
 my_columns = ['Ticker', 'Price'] #ADD MORE COLUMNS LATER
 
-Stock_df = pd.DataFrame(columns=my_columns)
+df = pd.DataFrame(columns = my_columns)
 
 ticker = ticker_lst[0]
-ticker_df = pd.Series([ticker, Stock_data_js['quote']['latestPrice']], index = my_columns)
-print(ticker_df)
+ticker_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice']]], columns=my_columns)
 
-# for symbol in symbol_string.split(','):
-#         final_dataframe = final_dataframe.append(
-#     pd.Series([symbol,
-#            data[symbol]['quote']['latestPrice'],
-#            data[symbol]['stats']['year1ChangePercent'],
-#            'N/A'
-#            ],
-#           index = my_columns),
-# ignore_index = True)
+ticker = ticker_lst[1]
+ticker_df_2 = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice']]], columns=my_columns)
+
+df = pd.concat([ticker_df, ticker_df_2], axis = 0)
+
+print(ticker_df)
+print(ticker_df_2)
+print('----')
+print(df)
 
 
 
