@@ -57,6 +57,14 @@ for i in range(2):
     Stock_data_js = rq.get(API_url).json()
     Stock_data_js_lst.append(Stock_data_js)
 
+print(Stock_data_js_lst)
+
+for i in range(len(Stock_data_js_lst)):
+    print(Stock_data_js_lst[i])
+
+#Save Stock_data_js_lst to file to avoid excessive API requests as i mess with putting it in a dataframe
+
+
 
 
 
