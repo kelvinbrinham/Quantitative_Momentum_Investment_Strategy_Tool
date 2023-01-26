@@ -34,11 +34,8 @@ ticker_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice']
 ticker = ticker_lst[1]
 ticker_df_2 = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice']]], columns=my_columns)
 
-df = pd.concat([ticker_df, ticker_df_2], axis = 0)
+df = pd.concat([ticker_df, ticker_df_2], axis = 0, ignore_index = True)
 
-print(ticker_df)
-print(ticker_df_2)
-print('----')
 print(df)
 
 
