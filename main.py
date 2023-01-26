@@ -32,11 +32,25 @@ for Ticker in Ticker_list:
     Ticker_list_stripped.append(Ticker.split()[0])
 
 #TRIM TICKER LIST TO 1 STOCK FOR TESTING PURPOSES
-Ticker_list_stripped = Ticker_list_stripped[:1]
+Ticker_list_stripped = Ticker_list_stripped[:3]
+print(Ticker_list_stripped)
+
+# ticker = Ticker_list_stripped[0]
 
 
-ticker = Ticker_list_stripped[0]
+#Creating a batch request from API, IEX uses comma seperated string of Tickers
+#Creating a comma separated string of tickers from ticker list stripped
 
+
+# Ticker_string
+# API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_string}&types=stats?token={API_key}'
+
+'''
+1:58
+'''
+
+
+'''
 API_url = f'https://cloud.iexapis.com/stable/stock/{ticker}/stats?token={API_key}'
 
 
@@ -46,3 +60,4 @@ print(Stock_data_js)
 
 month1ChangePercent = Stock_data_js['month1ChangePercent']
 print(month1ChangePercent)
+'''
