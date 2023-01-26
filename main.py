@@ -46,12 +46,11 @@ Ticker_strings_lst = []
 for i in range(len(Ticker_list_stripped_chunked)):
     Ticker_strings_lst.append(','.join(Ticker_list_stripped_chunked[i]))
 
-
 #Perform batch requests from API to retrieve data
 Stock_data_js_lst = []
 #Work with length 3 for now
 for i in range(2):
-    API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats&token={API_key}'
+    API_url = f'https://sandbox.iexapis.com/stable/stock/market/batch/?types=stats,quote&symbols={Ticker_strings_lst[i]}&token={API_key}'
     Stock_data_js = rq.get(API_url).json()
     Stock_data_js_lst.append(Stock_data_js)
 
@@ -63,3 +62,14 @@ for i in range(len(Stock_data_js_lst)):
 
 with open('Stock_data.json', 'w') as f:
     js.dump(Stock_data_js_lst, f)
+
+
+
+'''
+#Perform the batch API request
+print(Stock_data_js)
+print(Stock_data_js['MMM']['stats'])
+
+month1ChangePercent = Stock_data_js['MMM']['month1ChangePercent']
+print(month1ChangePercent)
+'''

@@ -24,9 +24,23 @@ ticker_lst = ['MMM', 'AOS', 'ABT']
 ticker_string = ','.join(ticker_lst)
 
 #Put stock data into a df before analysis
-my_columns = ['Ticker', 'Price', 'One-Year Price Return', 'No. Shares to Buy'] #ADD MORE COLUMNS LATER
+my_columns = ['Ticker', 'Price'] #ADD MORE COLUMNS LATER
 
 Stock_df = pd.DataFrame(columns=my_columns)
+
+ticker = ticker_lst[0]
+ticker_df = pd.Series([ticker, Stock_data_js['quote']['latestPrice']], index = my_columns)
+print(ticker_df)
+
+# for symbol in symbol_string.split(','):
+#         final_dataframe = final_dataframe.append(
+#     pd.Series([symbol,
+#            data[symbol]['quote']['latestPrice'],
+#            data[symbol]['stats']['year1ChangePercent'],
+#            'N/A'
+#            ],
+#           index = my_columns),
+# ignore_index = True)
 
 
 
