@@ -17,15 +17,21 @@ API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API
 API_key = linecache.getline(API_key_file_path, 10).strip()
 
 ticker_string = 'AAPL,FB'
-API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={ticker_string}&types=stats,quote,chart&range=1y&token={API_key}'
+API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={ticker_string}&types=stats,quote,chart&range=ytd&token={API_key}'
 Stock_data_js = rq.get(API_url).json()
 
 no_data_points = len(Stock_data_js['AAPL']['chart'])
-# avg_1y_mom = 0
-# for i in range(no_data_points):
-#     avg_1y_mom += Stock_data_js['AAPL']['chart'][0]['close']
-#
-# print(avg_1y_mom)
+avg_ytd_mom = 0 # Average 1 day momentum ytd
+ytd_mom_hit_ratio = 0 # no. days with increased momentum
+
+for i in range(no_data_points):
+    percent_chg_current = Stock_data_js['AAPL']['chart'][i]['changePercent']
+    avg_ytd_mom += percent_chg_current / no_data_points
+    if percent_chg_current > 0:
+        ytd_mom_hit_ratio += 1 / no_data_points
+
+print(avg_ytd_mom)
+print(ytd_mom_hit_ratio)
 
 
 
@@ -35,6 +41,6 @@ no_data_points = len(Stock_data_js['AAPL']['chart'])
 # print(Stock_data_js['AAPL'])
 # print(len(Stock_data_js['AAPL']))
 #
-print(Stock_data_js['AAPL']['chart'][0]['close'])
-print(Stock_data_js['AAPL']['chart'][1]['close'])
+print(Stock_data_js['AAPL']['chart'][0]['changePercent'])
+print(Stock_data_js['AAPL']['chart'][1]['changePercent'])
 # print(len(Stock_data_js['AAPL']['chart']))
