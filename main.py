@@ -13,55 +13,57 @@ import datetime as dt
 import openpyxl as xl
 from openpyxl.styles import Font, Color
 
-pd.set_option('display.max_columns', None)
 
+pd.set_option('display.max_columns', None)
 
 # Importing API key from file as to keep it secret when i publish code
 API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt'
 API_key = linecache.getline(API_key_file_path, 10).strip()
-#1. Import list of stocks we are interested in from s and p 500 csv file
-# i found online
 
+#Import list of S&P500 stocks from csv file i found online
 universe_df = pd.read_csv(r'S&P500_Stocks.csv')
 
-#List of Tickers from spreadsheet
+#Create List of stock tickers
 Ticker_list = list(universe_df['Symbol'])
 Ticker_list_stripped = []
 
-#Strip the ticker symbols to the base tickers
+#Strip the ticker symbols to the base tickers (ignore exchanges, blank spaces etc.)
 for Ticker in Ticker_list:
     Ticker_list_stripped.append(Ticker.split()[0])
 
+#Shorten for testing to reduce API requests (slow and limited number of requests on free trial)
 Ticker_list_stripped = Ticker_list_stripped[:10]
 
-#Creating a batch request from API, IEX uses comma seperated string of Tickers
-#Creating a comma separated string of tickers from ticker list stripped
-
-#Create list of sub lists each 100 length so as not to create a batch request that is too long.
+#Create sub lists of tickers with length chunk_length so that each API batch request isn't too long
 chunk_length = 100
 Ticker_list_stripped_chunked = [Ticker_list_stripped[x:x+chunk_length] for x in range(0, len(Ticker_list_stripped), chunk_length)]
 
+#List of strings, each containing multiple comma separated tickers ('AAPL,FB,...')
 Ticker_strings_lst = []
 for i in range(len(Ticker_list_stripped_chunked)):
     Ticker_strings_lst.append(','.join(Ticker_list_stripped_chunked[i]))
 
-
+#Open file containing list of tickers supported by the API
 list_of_tickers_supported_f = open(f'list_of_tickers_supported.json')
 list_of_tickers_supported_js = js.load(list_of_tickers_supported_f)
 
+#Create list of accepted tickers
 API_symbol_lst = [x['symbol'] for x in list_of_tickers_supported_js]
 
 
 #Perform batch requests from API to retrieve data
-#Creating a high quality momentum strategy
+#Create list of dataframes (one for each stock)
 data_df_lst = []
+#Define the columns of my data frame
 my_columns = ['Ticker', 'Price', 'YTD Average 1-Day Percentage Momentum', 'YTD 1-Day Momentum Hit Ratio', 'Buy']
 
-
+#Loop over each ticker string
 for i in range(len(Ticker_list_stripped_chunked)):
     API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats,quote,chart&token={API_key}'
+    #Request batch stock data
     Stock_data_js = rq.get(API_url).json()
     for ticker in Ticker_strings_lst[i].split(','):
+        #Write individual data frame for each stock and add to data_df_lst
         if ticker in API_symbol_lst:
             #Work out 1 year average Momentum
             no_data_points = len(Stock_data_js[ticker]['chart']) # no. trading days in ytd
@@ -77,19 +79,21 @@ for i in range(len(Ticker_list_stripped_chunked)):
             Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice'],
                                     avg_ytd_mom, ytd_mom_hit_ratio, 'N/A']], columns=my_columns)
 
-        else:
+        else: #If ticker is not supported by the API
             Stock_df = pd.DataFrame(columns=my_columns)
         data_df_lst.append(Stock_df)
 
-data_df = pd.concat(data_df_lst, axis = 0, ignore_index = True)
-data_df.dropna(inplace = True)
-data_df.reset_index(inplace = True)
+#Create 1 overall dataframe containing all relevant data for each stock
+#(I create multiple data frames and then use concat because append() is soon to be removed from pandas)
+data_df = pd.concat(data_df_lst, axis = 0, ignore_index = True).dropna(inplace = True).reset_index(inplace = True)
 
+#Removing Stocks with 1-Day momentum hit-ratios worse than:
+Minimum_1d_momentum_hit_ratio = 0.1
+data_df.drop(data_df[data_df['YTD 1-Day Momentum Hit Ratio'] < Minimum_1d_momentum_hit_ratio].index, inplace = True)
 
-#Working out stocks with best high quality momentum
-data_df.drop(data_df[data_df['YTD 1-Day Momentum Hit Ratio'] < 0.1].index, inplace = True)
-
+#Sort the remaining stocks by YTD average 1-Day percentage momentum
 data_df.sort_values('YTD Average 1-Day Percentage Momentum', ascending = False, inplace = True)
+
 
 cash = 10000
 portfolio_length = 20
