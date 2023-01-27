@@ -83,7 +83,13 @@ data_df = pd.concat(data_df_lst, axis = 0, ignore_index = True)
 data_df.dropna(inplace = True)
 data_df.reset_index(inplace = True)
 
+
+#Working out stocks with best high quality momentum
+data_df.drop(data_df[data_df['YTD 1-Day Momentum Hit Ratio'] < 0.7].index, inplace = True)
+
+data_df.sort_values('YTD Average 1-Day Percentage Momentum', ascending = False, inplace = True)
+
+data_df.reset_index(inplace = True)
+
 print(data_df)
-
-
 data_df.to_excel('OUTPUT.xlsx')
