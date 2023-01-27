@@ -60,17 +60,17 @@ for i in range(len(Ticker_list_stripped_chunked)):
         if ticker in API_symbol_lst:
             Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice'], Stock_data_js[ticker]['stats']['year1ChangePercent'], 'N/A']], columns=my_columns)
         else:
-            Stock_df = pd.DataFrame([[ticker, 'N/A', 'N/A', 'N/A']], columns=my_columns)
+            Stock_df = pd.DataFrame([[ticker, np.nan, np.nan, np.nan]], columns=my_columns)
         data_df_lst.append(Stock_df)
 
 
 data_df = pd.concat(data_df_lst, axis = 0, ignore_index = True)
+data_df.dropna(inplace = True)
+data_df.sort_values(by = 'One Year Price Return', ascending = False, inplace = True, na_position='last')
+data_df.reset_index(inplace = True)
+data_df = data_df[:50]
+
 print(data_df)
-
-# data_df.sort_values('One Year Price Return', ascending = False, inplace = True)
-# data_df = data_df[:50]
-
-# print(data_df)
 
 
 # data_df.to_excel('OUTPUT.xlsx')
