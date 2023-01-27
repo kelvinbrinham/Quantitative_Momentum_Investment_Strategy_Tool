@@ -130,7 +130,6 @@ Momentum_strategy_ws['A2'].font = date_font
 Momentum_strategy_ws['A2'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-print(data_df)
 for column_ in Momentum_strategy_ws.columns:
     column_letter_ = column_[0].column_letter
     width_ = max(len(cell.value) for cell in column_ if isinstance(cell.value, str))
