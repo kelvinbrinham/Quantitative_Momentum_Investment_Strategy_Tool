@@ -1,7 +1,17 @@
 '''
 test
 '''
+import numpy as np
+import pandas as pd
+import math as mth
+import requests as rq
+import linecache
+from scipy import stats
+import json as js
+import datetime as dt
 
+API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt'
+API_key = linecache.getline(API_key_file_path, 10).strip()
 
 class Equity:
     #List of equity objects in Portfolio
@@ -32,12 +42,25 @@ class Equity:
         print(Equity.universe)
 
 
-    def total_investment_value(self):
+    def total_invested_value(self):
         return self.__price * self.__quantity
 
 
-    def total_value(self):
-        
+    def current_stock_price(self):
+        API_url = f'https://cloud.iexapis.com/stable/stock/{self.__ticker}/quote/latestPrice?token={API_key}'
+        current_price_ = rq.get(API_url).json()
+        return current_price_
+
+
+    def stock_total_value(self):
+        API_url = f'https://cloud.iexapis.com/stable/stock/{self.__ticker}/quote/latestPrice?token={API_key}'
+        current_price_ = rq.get(API_url).json()
+        return current_price_ * self.__quantity
+
+    # def portfolio_value(self):
+    #     API_url = f'https://cloud.iexapis.com/stable/stock/{self.__ticker}/quote/latestPrice?token={API_key}'
+    #     current_price_ = rq.get(API_url).json()
+    #     return current_price_ * self.__quantity
 
 
     def __repr__(self):
@@ -45,7 +68,10 @@ class Equity:
         return f"{self.__class__.__name__}('{self.__ticker}', {self.__price}, {self.__quantity})"
 
 
-Apple = Equity('AAPL', 66, 1)
+Apple = Equity('AAPL', 140, 2)
 
 
 print(Apple)
+print(Apple.current_stock_price())
+print(Apple.stock_total_value())
+print(Apple.total_invested_value())

@@ -1,12 +1,20 @@
 '''
 test 3
 '''
-import pandas as pd
 import numpy as np
+import pandas as pd
+import math as mth
+import requests as rq
+import linecache
+from scipy import stats
 import json as js
+import datetime as dt
 
 
-list_of_tickers_supported_f = open(f'list_of_tickers_supported.json')
-list_of_tickers_supported_js = js.load(list_of_tickers_supported_f)
+API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt'
+API_key = linecache.getline(API_key_file_path, 10).strip()
 
-API_symbol_lst = [x['symbol'] for x in list_of_tickers_supported_js]
+API_url = f'https://cloud.iexapis.com/stable/stock/AAPL/quote/latestPrice?token={API_key}'
+Stock_data_js = rq.get(API_url).json()
+
+print(Stock_data_js)

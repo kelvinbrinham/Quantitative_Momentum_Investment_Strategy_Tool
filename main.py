@@ -60,17 +60,42 @@ for i in range(len(Ticker_list_stripped_chunked)):
         if ticker in API_symbol_lst:
             Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice'], Stock_data_js[ticker]['stats']['year1ChangePercent'], 'N/A']], columns=my_columns)
         else:
-            Stock_df = pd.DataFrame([[ticker, np.nan, np.nan, np.nan]], columns=my_columns)
+            Stock_df = pd.DataFrame(columns=my_columns)
         data_df_lst.append(Stock_df)
 
 
 data_df = pd.concat(data_df_lst, axis = 0, ignore_index = True)
 data_df.dropna(inplace = True)
-data_df.sort_values(by = 'One Year Price Return', ascending = False, inplace = True, na_position='last')
 data_df.reset_index(inplace = True)
-data_df = data_df[:50]
 
 print(data_df)
+
+#Creating a high quality momentum strategy
+#Get data from API
+data_df_lst = []
+my_columns = ['Ticker', 'Price',
+                'One-Year Price Return',
+                'One-Year Return Percentile',
+                'Six-Month Price Return',
+                'Six-Month Return Percentile',
+                'Three-Month Price Return',
+                'Three-Month Return Percentile',
+                'One-Month Price Return',
+                'One-Month Return Percentile',
+                'HQM Score']
+                
+#
+# for i in range(len(Ticker_list_stripped_chunked)):
+#     API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats,quote&token={API_key}'
+#     Stock_data_js = rq.get(API_url).json()
+#     for ticker in Ticker_strings_lst[i].split(','):
+#         if ticker in API_symbol_lst:
+#             Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice'], Stock_data_js[ticker]['stats']['year1ChangePercent'], 'N/A']], columns=my_columns)
+#         else:
+#             Stock_df = pd.DataFrame([[ticker, np.nan, np.nan, np.nan]], columns=my_columns)
+#         data_df_lst.append(Stock_df)
+
+
 
 
 # data_df.to_excel('OUTPUT.xlsx')
