@@ -32,7 +32,7 @@ for Ticker in Ticker_list:
     Ticker_list_stripped.append(Ticker.split()[0])
 
 #Shorten for testing to reduce API requests (slow and limited number of requests on free trial)
-# Ticker_list_stripped = Ticker_list_stripped[:10]
+Ticker_list_stripped = Ticker_list_stripped[:10]
 
 #Create sub lists of tickers with length chunk_length so that each API batch request isn't too long
 chunk_length = 100
@@ -90,7 +90,7 @@ data_df.dropna(inplace = True)
 data_df.reset_index(inplace = True)
 
 #Removing Stocks with 1-Day momentum hit-ratios worse than:
-Minimum_1d_momentum_hit_ratio = 0.7
+Minimum_1d_momentum_hit_ratio = 0.1 #CHANGE THIS!!!!!!
 data_df.drop(data_df[data_df['YTD 1-Day Momentum Hit Ratio'] < Minimum_1d_momentum_hit_ratio].index, inplace = True)
 
 #Sort the remaining stocks by YTD average 1-Day percentage momentum
@@ -127,7 +127,7 @@ Momentum_strategy_ws = Momentum_strategy_wb.active
 #Format percentages
 percentage_columns = ['C', 'D']
 for letter in percentage_columns:
-    for i in range(4, 4 + portfolio_length):
+    for i in range(5, 5 + portfolio_length):
         Momentum_strategy_ws[letter + str(i)].number_format = '0.00%'
 
 #Add date and title
