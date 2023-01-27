@@ -53,33 +53,18 @@ API_symbol_lst = [x['symbol'] for x in list_of_tickers_supported_js]
 #Perform batch requests from API to retrieve data
 #Creating a high quality momentum strategy
 data_df_lst = []
-my_columns = ['Ticker', 'Price',
-                'One-Year Price Return',
-                'One-Year Return Percentile',
-                'Six-Month Price Return',
-                'Six-Month Return Percentile',
-                'Three-Month Price Return',
-                'Three-Month Return Percentile',
-                'One-Month Price Return',
-                'One-Month Return Percentile',
-                'HQM Score']
+my_columns = ['Ticker', 'Price', 'One-Year Average Percentage Momentum']
 
 
 for i in range(len(Ticker_list_stripped_chunked)):
-    API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats,quote&token={API_key}'
+    API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats,quote,chart&token={API_key}'
     Stock_data_js = rq.get(API_url).json()
     for ticker in Ticker_strings_lst[i].split(','):
         if ticker in API_symbol_lst:
+            #Work out 1 year average Momentum
+
             Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice'],
-                                Stock_data_js[ticker]['stats']['year1ChangePercent'],
-                                'N/A',
-                                Stock_data_js[ticker]['stats']['month6ChangePercent'],
-                                'N/A',
-                                Stock_data_js[ticker]['stats']['month3ChangePercent'],
-                                'N/A',
-                                Stock_data_js[ticker]['stats']['month1ChangePercent'],
-                                'N/A',
-                                'N/A']], columns=my_columns)
+                                    'N/A']], columns=my_columns)
 
         else:
             Stock_df = pd.DataFrame(columns=my_columns)
