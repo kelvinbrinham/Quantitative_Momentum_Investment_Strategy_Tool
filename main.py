@@ -133,6 +133,6 @@ Momentum_strategy_ws['A2'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 for column_ in Momentum_strategy_ws.columns:
     column_letter_ = column_[0].column_letter
     width_ = max(len(cell.value) for cell in column_ if isinstance(cell.value, str))
-    Momentum_strategy_ws.column_dimensions[column_letter_].width = width_
+    Momentum_strategy_ws.column_dimensions[column_letter_].width = width_ + 3
 
 Momentum_strategy_wb.save(Momentum_strategy_file_name)
