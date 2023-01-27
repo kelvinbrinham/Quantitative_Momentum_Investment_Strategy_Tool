@@ -32,7 +32,7 @@ for Ticker in Ticker_list:
     Ticker_list_stripped.append(Ticker.split()[0])
 
 #Shorten for testing to reduce API requests (slow and limited number of requests on free trial)
-Ticker_list_stripped = Ticker_list_stripped[:10]
+# Ticker_list_stripped = Ticker_list_stripped[:10]
 
 #Create sub lists of tickers with length chunk_length so that each API batch request isn't too long
 chunk_length = 100
@@ -85,29 +85,34 @@ for i in range(len(Ticker_list_stripped_chunked)):
 
 #Create 1 overall dataframe containing all relevant data for each stock
 #(I create multiple data frames and then use concat because append() is soon to be removed from pandas)
-data_df = pd.concat(data_df_lst, axis = 0, ignore_index = True).dropna(inplace = True).reset_index(inplace = True)
+data_df = pd.concat(data_df_lst, axis = 0, ignore_index = True)
+data_df.dropna(inplace = True)
+data_df.reset_index(inplace = True)
 
 #Removing Stocks with 1-Day momentum hit-ratios worse than:
-Minimum_1d_momentum_hit_ratio = 0.1
+Minimum_1d_momentum_hit_ratio = 0.7
 data_df.drop(data_df[data_df['YTD 1-Day Momentum Hit Ratio'] < Minimum_1d_momentum_hit_ratio].index, inplace = True)
 
 #Sort the remaining stocks by YTD average 1-Day percentage momentum
 data_df.sort_values('YTD Average 1-Day Percentage Momentum', ascending = False, inplace = True)
+data_df.reset_index(inplace = True)
 
 
+
+#Creting a portfolio (MOVE TO OOP!!!!)
 cash = 10000
 portfolio_length = 20
 
-data_df.reset_index(inplace = True)
-
 data_df = data_df[:portfolio_length]
 
-
+#Size of each EQUAL position
 position_size = cash / portfolio_length
 
+#Add number of stocks to buy to the spreadsheet
 for i in range(len(data_df)):
     data_df.loc[i, 'Buy'] = mth.floor(position_size / data_df['Price'][i])
 
+#Drop unnecessary columns
 data_df.drop(columns = ['level_0', 'index'], inplace = True)
 
 
@@ -115,15 +120,17 @@ data_df.drop(columns = ['level_0', 'index'], inplace = True)
 Momentum_strategy_file_name = 'OUTPUT/Momentum_strategy.xlsx'
 data_df.to_excel(Momentum_strategy_file_name, sheet_name = 'Order_Sheet', startrow = 3, index = False)
 
+#Load excel book
 Momentum_strategy_wb = xl.load_workbook(Momentum_strategy_file_name)
 Momentum_strategy_ws = Momentum_strategy_wb.active
 
+#Format percentages
 percentage_columns = ['C', 'D']
-
 for letter in percentage_columns:
     for i in range(4, 4 + portfolio_length):
         Momentum_strategy_ws[letter + str(i)].number_format = '0.00%'
 
+#Add date and title
 title_font = Font(name = 'Arial', size = 18, color = '000080', bold = True)
 date_font = Font(name = 'Arial', size = 15)
 
@@ -133,10 +140,11 @@ Momentum_strategy_ws['A1'] = 'Momentum Trading Strategy'
 Momentum_strategy_ws['A2'].font = date_font
 Momentum_strategy_ws['A2'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-
+#Adjust column width to show contents clearly
 for column_ in Momentum_strategy_ws.columns:
     column_letter_ = column_[0].column_letter
     width_ = max(len(cell.value) for cell in column_ if isinstance(cell.value, str))
     Momentum_strategy_ws.column_dimensions[column_letter_].width = width_ + 3
 
+#Save workbook
 Momentum_strategy_wb.save(Momentum_strategy_file_name)
