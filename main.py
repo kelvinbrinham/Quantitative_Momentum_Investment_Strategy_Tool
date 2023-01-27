@@ -11,6 +11,7 @@ from scipy import stats
 import json as js
 import datetime as dt
 import openpyxl as xl
+from openpyxl.styles import Font, Color
 
 pd.set_option('display.max_columns', None)
 
@@ -104,11 +105,11 @@ for i in range(len(data_df)):
     data_df.loc[i, 'Buy'] = mth.floor(position_size / data_df['Price'][i])
 
 data_df.drop(columns = ['level_0', 'index'], inplace = True)
-print(data_df)
+
 
 #Formatting the Excel sheet
 Momentum_strategy_file_name = 'Momentum_strategy.xlsx'
-data_df.to_excel(Momentum_strategy_file_name, sheet_name = 'Order_Sheet', startrow = 2, index = False)
+data_df.to_excel(Momentum_strategy_file_name, sheet_name = 'Order_Sheet', startrow = 3, index = False)
 
 Momentum_strategy_wb = xl.load_workbook(Momentum_strategy_file_name)
 Momentum_strategy_ws = Momentum_strategy_wb.active
@@ -119,9 +120,14 @@ for letter in percentage_columns:
     for i in range(4, 4 + portfolio_length):
         Momentum_strategy_ws[letter + str(i)].number_format = '0.00%'
 
-title = 'Momentum Trading Strategy ' + str(dt.datetime.now())
-for column in range(1, 10):
-    Momentum_strategy_ws.cell(column=column, row=1, value=title.format(column))
+title_font = Font(name = 'Arial', size = 18, color = '000080', bold = True)
+date_font = Font(name = 'Arial', size = 15, color = '000080', bold = False)
+
+Momentum_strategy_ws['A1'].font = title_font
+Momentum_strategy_ws['A1'] = 'Momentum Trading Strategy'
+
+Momentum_strategy_ws['A2'].font = date_font
+Momentum_strategy_ws['A2'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 Momentum_strategy_wb.save(Momentum_strategy_file_name)
