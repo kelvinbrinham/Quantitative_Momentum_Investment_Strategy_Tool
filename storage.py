@@ -1,6 +1,0 @@
-'''
-Storage
-'''
-
-
-#FLatten list
