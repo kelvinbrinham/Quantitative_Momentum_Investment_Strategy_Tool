@@ -32,7 +32,7 @@ Ticker_list_stripped = []
 for Ticker in Ticker_list:
     Ticker_list_stripped.append(Ticker.split()[0])
 
-
+Ticker_list_stripped = Ticker_list_stripped[:10]
 
 #Creating a batch request from API, IEX uses comma seperated string of Tickers
 #Creating a comma separated string of tickers from ticker list stripped
@@ -87,7 +87,7 @@ data_df.reset_index(inplace = True)
 
 
 #Working out stocks with best high quality momentum
-data_df.drop(data_df[data_df['YTD 1-Day Momentum Hit Ratio'] < 0.7].index, inplace = True)
+data_df.drop(data_df[data_df['YTD 1-Day Momentum Hit Ratio'] < 0.1].index, inplace = True)
 
 data_df.sort_values('YTD Average 1-Day Percentage Momentum', ascending = False, inplace = True)
 
@@ -130,9 +130,10 @@ Momentum_strategy_ws['A2'].font = date_font
 Momentum_strategy_ws['A2'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-
+print(data_df)
 for column_ in Momentum_strategy_ws.columns:
+    column_letter_ = column_[0].column_letter
     width_ = max(len(cell.value) for cell in column_ if isinstance(cell.value, str))
-    Momentum_strategy_ws.column_dimensions[str(column_)].width = width_
+    Momentum_strategy_ws.column_dimensions[column_letter_].width = width_
 
-# Momentum_strategy_wb.save(Momentum_strategy_file_name)
+Momentum_strategy_wb.save(Momentum_strategy_file_name)
