@@ -53,7 +53,7 @@ API_symbol_lst = [x['symbol'] for x in list_of_tickers_supported_js]
 #Perform batch requests from API to retrieve data
 #Creating a high quality momentum strategy
 data_df_lst = []
-my_columns = ['Ticker', 'Price', 'One-Year Average Percentage Momentum']
+my_columns = ['Ticker', 'Price', 'YTD Average 1-Day Percentage Momentum', 'YTD 1-Day Momentum Hit Ratio']
 
 
 for i in range(len(Ticker_list_stripped_chunked)):
@@ -62,9 +62,18 @@ for i in range(len(Ticker_list_stripped_chunked)):
     for ticker in Ticker_strings_lst[i].split(','):
         if ticker in API_symbol_lst:
             #Work out 1 year average Momentum
+            no_data_points = len(Stock_data_js[ticker]['chart']) # no. trading days in ytd
+            avg_ytd_mom = 0 # Average 1 day momentum ytd
+            ytd_mom_hit_ratio = 0 # no. days with increased momentum
+
+            for j in range(no_data_points):
+                percent_chg_current = Stock_data_js[ticker]['chart'][j]['changePercent']
+                avg_ytd_mom += percent_chg_current / no_data_points
+                if percent_chg_current > 0:
+                    ytd_mom_hit_ratio += 1 / no_data_points
 
             Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice'],
-                                    'N/A']], columns=my_columns)
+                                    avg_ytd_mom, ytd_mom_hit_ratio]], columns=my_columns)
 
         else:
             Stock_df = pd.DataFrame(columns=my_columns)
@@ -77,4 +86,4 @@ data_df.reset_index(inplace = True)
 print(data_df)
 
 
-# data_df.to_excel('OUTPUT.xlsx')
+data_df.to_excel('OUTPUT.xlsx')
