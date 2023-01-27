@@ -9,3 +9,6 @@ import linecache
 from scipy import stats
 import json as js
 import datetime as dt
+
+
+print(isinstance(8, str))

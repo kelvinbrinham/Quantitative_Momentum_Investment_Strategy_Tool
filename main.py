@@ -121,7 +121,7 @@ for letter in percentage_columns:
         Momentum_strategy_ws[letter + str(i)].number_format = '0.00%'
 
 title_font = Font(name = 'Arial', size = 18, color = '000080', bold = True)
-date_font = Font(name = 'Arial', size = 15, color = '000080', bold = False)
+date_font = Font(name = 'Arial', size = 15)
 
 Momentum_strategy_ws['A1'].font = title_font
 Momentum_strategy_ws['A1'] = 'Momentum Trading Strategy'
@@ -130,4 +130,9 @@ Momentum_strategy_ws['A2'].font = date_font
 Momentum_strategy_ws['A2'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-Momentum_strategy_wb.save(Momentum_strategy_file_name)
+
+for column_ in Momentum_strategy_ws.columns:
+    width_ = max(len(cell.value) for cell in column_ if isinstance(cell.value, str))
+    Momentum_strategy_ws.column_dimensions[str(column_)].width = width_
+
+# Momentum_strategy_wb.save(Momentum_strategy_file_name)
