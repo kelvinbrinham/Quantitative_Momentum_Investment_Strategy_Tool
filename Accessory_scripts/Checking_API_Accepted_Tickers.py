@@ -1,15 +1,11 @@
 '''
-test 2
+Creating a file containing the accepted tickers for the IEX API
 '''
 
-import numpy as np
-import pandas as pd
-import math as mth
 import requests as rq
 import linecache
-from scipy import stats
 import json as js
-import datetime as dt
+
 
 API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt'
 API_key = linecache.getline(API_key_file_path, 10).strip()
