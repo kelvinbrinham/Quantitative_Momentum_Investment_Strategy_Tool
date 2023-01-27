@@ -121,7 +121,7 @@ for letter in percentage_columns:
 
 title = 'Momentum Trading Strategy ' + str(dt.datetime.now())
 for column in range(1, 10):
-    ws1.cell(column=column, row=1, value=title.format(column))
+    Momentum_strategy_ws.cell(column=column, row=1, value=title.format(column))
 
 
 Momentum_strategy_wb.save(Momentum_strategy_file_name)
