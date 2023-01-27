@@ -20,11 +20,21 @@ ticker_string = 'AAPL,FB'
 API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={ticker_string}&types=stats,quote,chart&range=1y&token={API_key}'
 Stock_data_js = rq.get(API_url).json()
 
-print(Stock_data_js)
-print(len(Stock_data_js))
+no_data_points = len(Stock_data_js['AAPL']['chart'])
+# avg_1y_mom = 0
+# for i in range(no_data_points):
+#     avg_1y_mom += Stock_data_js['AAPL']['chart'][0]['close']
+#
+# print(avg_1y_mom)
 
-print(Stock_data_js['AAPL'])
-print(len(Stock_data_js['AAPL']))
 
-print(Stock_data_js['AAPL']['chart'])
-print(len(Stock_data_js['AAPL']['chart']))
+
+# print(Stock_data_js)
+# print(len(Stock_data_js))
+#
+# print(Stock_data_js['AAPL'])
+# print(len(Stock_data_js['AAPL']))
+#
+print(Stock_data_js['AAPL']['chart'][0]['close'])
+print(Stock_data_js['AAPL']['chart'][1]['close'])
+# print(len(Stock_data_js['AAPL']['chart']))
