@@ -10,6 +10,7 @@ import linecache
 from scipy import stats
 import json as js
 import datetime as dt
+import openpyxl as xl
 
 pd.set_option('display.max_columns', None)
 
@@ -53,7 +54,7 @@ API_symbol_lst = [x['symbol'] for x in list_of_tickers_supported_js]
 #Perform batch requests from API to retrieve data
 #Creating a high quality momentum strategy
 data_df_lst = []
-my_columns = ['Ticker', 'Price', 'YTD Average 1-Day Percentage Momentum', 'YTD 1-Day Momentum Hit Ratio']
+my_columns = ['Ticker', 'Price', 'YTD Average 1-Day Percentage Momentum', 'YTD 1-Day Momentum Hit Ratio', 'Buy']
 
 
 for i in range(len(Ticker_list_stripped_chunked)):
@@ -73,7 +74,7 @@ for i in range(len(Ticker_list_stripped_chunked)):
                     ytd_mom_hit_ratio += 1 / no_data_points
 
             Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice'],
-                                    avg_ytd_mom, ytd_mom_hit_ratio]], columns=my_columns)
+                                    avg_ytd_mom, ytd_mom_hit_ratio, 'N/A']], columns=my_columns)
 
         else:
             Stock_df = pd.DataFrame(columns=my_columns)
@@ -89,7 +90,38 @@ data_df.drop(data_df[data_df['YTD 1-Day Momentum Hit Ratio'] < 0.7].index, inpla
 
 data_df.sort_values('YTD Average 1-Day Percentage Momentum', ascending = False, inplace = True)
 
+cash = 10000
+portfolio_length = 20
+
 data_df.reset_index(inplace = True)
 
+data_df = data_df[:portfolio_length]
+
+
+position_size = cash / portfolio_length
+
+for i in range(len(data_df)):
+    data_df.loc[i, 'Buy'] = mth.floor(position_size / data_df['Price'][i])
+
+data_df.drop(columns = ['level_0', 'index'], inplace = True)
 print(data_df)
-data_df.to_excel('OUTPUT.xlsx')
+
+#Formatting the Excel sheet
+Momentum_strategy_file_name = 'Momentum_strategy.xlsx'
+data_df.to_excel(Momentum_strategy_file_name, sheet_name = 'Order_Sheet', startrow = 2, index = False)
+
+Momentum_strategy_wb = xl.load_workbook(Momentum_strategy_file_name)
+Momentum_strategy_ws = Momentum_strategy_wb.active
+
+percentage_columns = ['C', 'D']
+
+for letter in percentage_columns:
+    for i in range(4, 4 + portfolio_length):
+        Momentum_strategy_ws[letter + str(i)].number_format = '0.00%'
+
+title = 'Momentum Trading Strategy ' + str(dt.datetime.now())
+for column in range(1, 10):
+    ws1.cell(column=column, row=1, value=title.format(column))
+
+
+Momentum_strategy_wb.save(Momentum_strategy_file_name)
