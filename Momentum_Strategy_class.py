@@ -18,9 +18,6 @@ from openpyxl.styles import Font, Color
 
 
 class Momentum_strategy:
-    #Access API Key
-    # API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt'
-    # API_key = linecache.getline(API_key_file_path, 10).strip()
 
     #Create list of tickers supported by the API from file created in another script
     list_of_tickers_supported_f = open(f'list_of_tickers_supported.json')
