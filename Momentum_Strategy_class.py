@@ -19,8 +19,8 @@ from openpyxl.styles import Font, Color
 
 class Momentum_strategy:
     #Access API Key
-    API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt'
-    API_key = linecache.getline(API_key_file_path, 10).strip()
+    # API_key_file_path = r'/Users/kelvinbrinham/Documents/GitHub/Secret_Files/IEX_API_Key.txt'
+    # API_key = linecache.getline(API_key_file_path, 10).strip()
 
     #Create list of tickers supported by the API from file created in another script
     list_of_tickers_supported_f = open(f'list_of_tickers_supported.json')
@@ -29,7 +29,7 @@ class Momentum_strategy:
     #Create list of accepted tickers
     API_symbol_lst = [x['symbol'] for x in list_of_tickers_supported_js]
 
-    def __init__(self, investment: float, number_of_positions: int):
+    def __init__(self, investment: float, number_of_positions: int, API_key: str):
 
         #Validate initialisation arguements
         assert investment > 0, f'Investment {investment} is negative!'
@@ -39,6 +39,7 @@ class Momentum_strategy:
 
         self.__investment = investment
         self.__number_of_positions = number_of_positions
+        self.__API_key = API_key
 
 
     def __Ticker_strings_lst_(self, filename: str, ticker_tag: str):
@@ -79,7 +80,7 @@ class Momentum_strategy:
 
         #Loop over each ticker string
         for i in range(len(Ticker_list_stripped_chunked)):
-            API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats,quote,chart&token={Momentum_strategy.API_key}'
+            API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats,quote,chart&token={self.__API_key}'
             #Request batch stock data
             Stock_data_js = rq.get(API_url).json()
             for ticker in Ticker_strings_lst[i].split(','):
