@@ -1,6 +1,6 @@
 # Quantitative_Momentum_Investment_Strategy_Machine
 
-Summary: This tool takes investment inputs and analysis stocks to find the ones with the most high-quality momentum. The code then produces an output order spreadsheet outlining which and how many stocks to purchase.
+Summary: This tool takes investment inputs and analysis stocks to find the ones with the most high-quality momentum. The code then produces an output order spreadsheet outlining which and how many stocks to purchase based on current prices retrieved from the API.
 
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
