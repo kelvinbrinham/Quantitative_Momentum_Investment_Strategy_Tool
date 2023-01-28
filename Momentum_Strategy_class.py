@@ -1,5 +1,8 @@
 '''
-main_OOP 2
+Momentum Strategy Class
+
+This script contains the class which analyses selected stocks based on high quality Momentum
+and produces an order spreadsheet.
 '''
 
 import numpy as np
