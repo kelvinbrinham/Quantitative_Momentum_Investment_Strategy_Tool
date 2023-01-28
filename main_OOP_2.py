@@ -38,11 +38,11 @@ class Momentum_strategy:
         self.__number_of_positions = number_of_positions
 
 
-    def __Ticker_strings_lst_(self, filename: str):
+    def __Ticker_strings_lst_(self, filename: str, ticker_tag: str):
         universe_df = pd.read_csv(filename)
 
         #Create List of stock tickers
-        Ticker_list = list(universe_df['Symbol'])
+        Ticker_list = list(universe_df[ticker_tag])
         Ticker_list_stripped = []
 
         #Strip the ticker symbols to the base tickers (ignore exchanges, blank spaces etc.)
@@ -51,7 +51,7 @@ class Momentum_strategy:
 
         #CHANGE <><><><><><><><><><><><><><><><><><><><><><><><>
         #Shorten for testing to reduce API requests (slow and limited number of requests on free trial)
-        Ticker_list_stripped = Ticker_list_stripped[:10]
+        # Ticker_list_stripped = Ticker_list_stripped[:10]
         #<><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
         #Create sub lists of tickers with length chunk_length so that each API batch request isn't too long
@@ -107,7 +107,6 @@ class Momentum_strategy:
         return data_df
 
     def __analyse_momentum(self, Minimum_1d_momentum_hit_ratio, dataframe):
-        # Minimum_1d_momentum_hit_ratio = 0.1 #CHANGE THIS!!!!!!
         dataframe.drop(dataframe[dataframe['YTD 1-Day Momentum Hit Ratio'] < Minimum_1d_momentum_hit_ratio].index, inplace = True)
 
         #Sort the remaining stocks by YTD average 1-Day percentage momentum
@@ -117,11 +116,6 @@ class Momentum_strategy:
         return dataframe
 
     def __Create_output_spreadsheet(self, _filename, _dataframe):
-        # self.__investment = investment
-        # self.__number_of_positions = number_of_positions
-        # cash = 10000
-        # portfolio_length = 20
-
         _dataframe = _dataframe[:self.__number_of_positions]
 
         #Size of each EQUAL position
@@ -169,15 +163,10 @@ class Momentum_strategy:
         Momentum_strategy_wb.save(Momentum_strategy_file_name)
 
 
-    def Order_Sheet(self, Minimum_1d_momentum_hit_ratio, Index_filename__, Output_filename):
-        Ticker_strings_lst_, Ticker_list_stripped_chunked = self.__Ticker_strings_lst_(Index_filename__)
+    def Order_Sheet(self, Minimum_1d_momentum_hit_ratio, Index_filename__, ticker_tag_, Output_filename):
+        Ticker_strings_lst_, Ticker_list_stripped_chunked = self.__Ticker_strings_lst_(Index_filename__, ticker_tag_)
         df = self.__batch_request(Ticker_strings_lst_, Ticker_list_stripped_chunked)
         df = self.__analyse_momentum(Minimum_1d_momentum_hit_ratio, df)
         self.__Create_output_spreadsheet(Output_filename, df)
 
-
-
-
-
-# filename = 'S&P500_Stocks.csv'
-# strategy = Momentum_strategy(10000, 30)
+        # if len(df) <
