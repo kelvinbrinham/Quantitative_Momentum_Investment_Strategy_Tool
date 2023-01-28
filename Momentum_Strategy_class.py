@@ -54,7 +54,7 @@ class Momentum_strategy:
 
         #CHANGE <><><><><><><><><><><><><><><><><><><><><><><><>
         #Shorten for testing to reduce API requests (slow and limited number of requests on free trial)
-        # Ticker_list_stripped = Ticker_list_stripped[:10]
+        Ticker_list_stripped = Ticker_list_stripped[:10]
         #<><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
         #Create sub lists of tickers with length chunk_length so that each API batch request isn't too long
