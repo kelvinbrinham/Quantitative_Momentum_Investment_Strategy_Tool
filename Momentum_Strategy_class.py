@@ -44,6 +44,8 @@ class Momentum_strategy:
     def __Ticker_strings_lst_(self, filename: str, ticker_tag: str):
         universe_df = pd.read_csv(filename)
 
+        if ticker_tag not in universe_df:
+            raise Exception(f'Wrong Ticker tag, please check the tag in the file {filename}')
         #Create List of stock tickers
         Ticker_list = list(universe_df[ticker_tag])
         Ticker_list_stripped = []
@@ -52,8 +54,8 @@ class Momentum_strategy:
         for Ticker in Ticker_list:
             Ticker_list_stripped.append(Ticker.split()[0])
 
-        #CHANGE <><><><><><><><><><><><><><><><><><><><><><><><>
-        #Shorten for testing to reduce API requests (slow and limited number of requests on free trial)
+        #TESTING <><><><><><><><><><><><><><><><><><><><><><><><>
+        #Shorten ticker list for testing to reduce API requests (slow and limited number of requests on free trial)
         # Ticker_list_stripped = Ticker_list_stripped[:10]
         #<><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
@@ -184,7 +186,7 @@ class Momentum_strategy:
         __Momentum_strategy_wb.save(__Output_filename)
 
 
-    def Order_Sheet(self, Minimum_1d_momentum_hit_ratio: float, Index_filename__: str, ticker_tag_: str, Output_filename = 'OUTPUT/Order_sheet.xlsx', fractional_shares = False):
+    def Order_sheet(self, Minimum_1d_momentum_hit_ratio: float, Index_filename__: str, ticker_tag_: str, Output_filename = 'OUTPUT/Order_sheet.xlsx', fractional_shares = False):
 
         assert isinstance(Minimum_1d_momentum_hit_ratio, float) or isinstance(Minimum_1d_momentum_hit_ratio, int), f'Momentum hit ratio, {Minimum_1d_momentum_hit_ratio}, must be a number between 0 and 1'
         assert Minimum_1d_momentum_hit_ratio >= 0 and Minimum_1d_momentum_hit_ratio < 1, f'Momentum hit ratio, {Minimum_1d_momentum_hit_ratio}, must be a number between 0 and 1'
