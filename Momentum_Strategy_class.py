@@ -178,9 +178,10 @@ class Momentum_strategy:
         __Momentum_strategy_wb = xl.load_workbook(__Output_filename)
         __Momentum_strategy_ws = __Momentum_strategy_wb.active
 
-        Momentum_strategy_ws['A3'] = f'Positions to open: {__Buy_list_length}.'
-        Momentum_strategy_ws['A4'] = f'Capital invested: {"${:.2f}".format(__Capital_invested)}; {__Capital_invested_percent} of available capital.'
+        __Momentum_strategy_ws['A3'] = f'Positions to open: {__Buy_list_length}.'
+        __Momentum_strategy_ws['A4'] = f'Capital invested: {"${:.2f}".format(__Capital_invested)}; {__Capital_invested_percent} of available capital.'
 
+        __Momentum_strategy_wb.save(__Output_filename)
 
 
     def Order_Sheet(self, Minimum_1d_momentum_hit_ratio: float, Index_filename__: str, ticker_tag_: str, Output_filename = 'OUTPUT/Order_sheet.xlsx', fractional_shares = False):
