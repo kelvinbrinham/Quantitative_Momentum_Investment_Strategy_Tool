@@ -143,7 +143,7 @@ class Momentum_strategy:
 
         #Formatting the Excel sheet
         Momentum_strategy_file_name = _filename
-        _dataframe.to_excel(Momentum_strategy_file_name, sheet_name = 'Order_Sheet', startrow = 3, index = False)
+        _dataframe.to_excel(Momentum_strategy_file_name, sheet_name = 'Order_Sheet', startrow = 5, index = False)
 
         #Load excel book
         Momentum_strategy_wb = xl.load_workbook(Momentum_strategy_file_name)
@@ -152,7 +152,7 @@ class Momentum_strategy:
         #Format percentages
         percentage_columns = ['C', 'D']
         for letter in percentage_columns:
-            for i in range(5, 5 + __number_of_positions_remaining):
+            for i in range(7, 7 + __number_of_positions_remaining):
                 Momentum_strategy_ws[letter + str(i)].number_format = '0.00%'
 
         #Add date and title
@@ -174,7 +174,13 @@ class Momentum_strategy:
         #Save workbook
         Momentum_strategy_wb.save(Momentum_strategy_file_name)
 
-    
+    def __Add_summary_to_output_spreadsheet(self, __Output_filename, __Buy_list_length, __Capital_invested, __Capital_invested_percent):
+        __Momentum_strategy_wb = xl.load_workbook(__Output_filename)
+        __Momentum_strategy_ws = __Momentum_strategy_wb.active
+
+        Momentum_strategy_ws['A3'] = f'Positions to open: {__Buy_list_length}.'
+        Momentum_strategy_ws['A4'] = f'Capital invested: {"${:.2f}".format(__Capital_invested)}; {__Capital_invested_percent} of available capital.'
+
 
 
     def Order_Sheet(self, Minimum_1d_momentum_hit_ratio: float, Index_filename__: str, ticker_tag_: str, Output_filename = 'OUTPUT/Order_sheet.xlsx', fractional_shares = False):
@@ -198,6 +204,8 @@ class Momentum_strategy:
         Capital_invested = sum([price_list_[i] * Buy_list_[i] for i in range(len(Buy_list_)) if not isinstance(Buy_list_[i], str)])
         Capital_invested_percent = "{0:.0%}".format(Capital_invested / self.__investment)
         minimum_investment_ = min(price_list_) * self.__number_of_positions
+
+        self.__Add_summary_to_output_spreadsheet(Output_filename, Buy_list_length, Capital_invested, Capital_invested_percent)
 
         print('-----')
 
