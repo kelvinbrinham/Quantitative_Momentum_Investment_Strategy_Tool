@@ -54,7 +54,7 @@ FRACTIONAL_SHARES (default: False) = Set True to allow the order of fractional s
 
 Example Input:
 my_strategy = Momentum_strategy(10000, 20)
-my_strategy.Order_sheet(0.5, S&P500_Stocks.csv, 'symbol', OUTPUT/Order_sheet_1.xlsx, False)
+my_strategy.Order_sheet(0.5, S&P500_Stocks.csv, 'Symbol', OUTPUT/Order_sheet_1.xlsx, False)
 
 The above code will find the 20 stocks in the S&P500 with the highest YTD mean 1-Day momentum which also has a MHR above 0.5. The code works out how many shares to buy in each stock such that each stock position has an equal share of the 10,000 USD invested. I inputted False, therefore the code only calculates the order of whole shares by rounding positions down, meaning the final positions won't all be equal in size. The example spreadsheet i included is produced form this code.
 
