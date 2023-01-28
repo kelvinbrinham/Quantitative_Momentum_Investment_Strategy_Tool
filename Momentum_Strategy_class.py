@@ -185,17 +185,28 @@ class Momentum_strategy:
         df = self.__analyse_momentum(Minimum_1d_momentum_hit_ratio, df)
         self.__Create_output_spreadsheet(Output_filename, df, Index_filename__)
 
-        if len(df) < self.__number_of_positions:
-            print(f'Note: Number of positions smaller than desired because only {len(df)} stocks met the minimum momentum hit ratio criterion.')
 
         price_list_ = list(df['Price'])
         Buy_list_ = list(df['Buy'])
-        Buy_list_length = len([x for x in Buy_list_ if not isinstance(x, str)])
+        Buy_list_length = len([x for x in Buy_list_ if not isinstance(x, str) and x > 0])
+        print(Buy_list_)
+        print(price_list_)
+        print([price_list_[i] * Buy_list_[i] for i in range(Buy_list_length)])
         Capital_invested = sum([price_list_[i] * Buy_list_[i] for i in range(Buy_list_length)])
         Capital_invested_percent = "{0:.0%}".format(Capital_invested / self.__investment)
+        minimum_investment_ = min(price_list_) * self.__number_of_positions
 
-        print('\n')
-        print(f'Order Sheet Summary:')
-        print(f'Index: {Index_filename__.split("_")[0]}')
-        print(f'Positions to open: {len(df)}.')
-        print(f'Capital invested: {"${:.2f}".format(Capital_invested)}; {Capital_invested_percent} of available capital.')
+        print('-----')
+
+        if Buy_list_length == 0:
+            print(f'Not enough capital to open a position, please invest a minimum of ${minimum_investment_}')
+
+        else:
+            if Buy_list_length < self.__number_of_positions:
+                print(f'Note: Number of positions smaller than desired because only {Buy_list_length} stocks met the minimum momentum hit ratio criterion.')
+
+            print('-----')
+            print(f'Order Sheet Summary:')
+            print(f'Index: {Index_filename__.split("_")[0]}')
+            print(f'Positions to open: {Buy_list_length}.')
+            print(f'Capital invested: {"${:.2f}".format(Capital_invested)}; {Capital_invested_percent} of available capital.')
