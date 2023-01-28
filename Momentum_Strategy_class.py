@@ -118,9 +118,15 @@ class Momentum_strategy:
 
         return dataframe
 
-    def __Create_output_spreadsheet(self, _filename, _dataframe):
+    def __Create_output_spreadsheet(self, _filename, _dataframe, __Index_filename):
         _dataframe = _dataframe[:self.__number_of_positions]
         __number_of_positions_remaining = len(_dataframe)
+
+        if not __number_of_positions_remaining:
+            raise Exception('No stocks meet the momentum criteria you requested. Try lowering the 1-Day momentum hit ratio criterion.')
+
+        index_name = __Index_filename.split('_')[0]
+
         #Size of each EQUAL position
         position_size = self.__investment / __number_of_positions_remaining
 
@@ -151,7 +157,7 @@ class Momentum_strategy:
         date_font = Font(name = 'Arial', size = 15)
 
         Momentum_strategy_ws['A1'].font = title_font
-        Momentum_strategy_ws['A1'] = 'Momentum Trading Strategy'
+        Momentum_strategy_ws['A1'] = 'Momentum Trading Strategy (' + index_name + ')'
 
         Momentum_strategy_ws['A2'].font = date_font
         Momentum_strategy_ws['A2'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -168,7 +174,7 @@ class Momentum_strategy:
 
     def Order_Sheet(self, Minimum_1d_momentum_hit_ratio: float, Index_filename__: str, ticker_tag_: str, Output_filename: str):
 
-        assert isinstance(Minimum_1d_momentum_hit_ratio, float), f'Momentum hit ratio, {Minimum_1d_momentum_hit_ratio}, must be a number between 0 and 1'
+        assert isinstance(Minimum_1d_momentum_hit_ratio, float) or isinstance(Minimum_1d_momentum_hit_ratio, int), f'Momentum hit ratio, {Minimum_1d_momentum_hit_ratio}, must be a number between 0 and 1'
         assert Minimum_1d_momentum_hit_ratio >= 0 and Minimum_1d_momentum_hit_ratio < 1, f'Momentum hit ratio, {Minimum_1d_momentum_hit_ratio}, must be a number between 0 and 1'
         assert isinstance(Index_filename__, str), f'Input stock ticker list file name must be a string'
         assert isinstance(ticker_tag_, str), f'Input stock list file ticker tag must be a string'
@@ -177,7 +183,7 @@ class Momentum_strategy:
         Ticker_strings_lst_, Ticker_list_stripped_chunked = self.__Ticker_strings_lst_(Index_filename__, ticker_tag_)
         df = self.__batch_request(Ticker_strings_lst_, Ticker_list_stripped_chunked)
         df = self.__analyse_momentum(Minimum_1d_momentum_hit_ratio, df)
-        self.__Create_output_spreadsheet(Output_filename, df)
+        self.__Create_output_spreadsheet(Output_filename, df, Index_filename__)
 
         if len(df) < self.__number_of_positions:
             print(f'Note: Number of positions smaller than desired because only {len(df)} stocks met the minimum momentum hit ratio criterion.')
@@ -188,6 +194,8 @@ class Momentum_strategy:
         Capital_invested = sum([price_list_[i] * Buy_list_[i] for i in range(Buy_list_length)])
         Capital_invested_percent = "{0:.0%}".format(Capital_invested / self.__investment)
 
-        print(f'\n Order Sheet Summary:')
+        print('\n')
+        print(f'Order Sheet Summary:')
+        print(f'Index: {Index_filename__.split("_")[0]}')
         print(f'Positions to open: {len(df)}.')
-        print(f'Capital invested: {"{:.2f}".format(Capital_invested)}. {Capital_invested_percent} of available capital.')
+        print(f'Capital invested: {"${:.2f}".format(Capital_invested)}; {Capital_invested_percent} of available capital.')
