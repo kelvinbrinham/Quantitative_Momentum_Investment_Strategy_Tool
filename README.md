@@ -27,7 +27,7 @@ OUTPUT/Order_sheet_EXAMPLE.xlsx - Example output order sheet that the tool produ
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 IMPORTANT:
-The API key I use is private. It is stored in a config.py file on my local machine and loaded in main.py. YOU MUST input your API_key as outlined below. You may also choose to create a config.py file containing your API key which you import so as to keep it secret. I have left a commented import example on line 9 in main.py.
+The API key I use is private. It is stored in a config.py file on my local machine and loaded in main.py. YOU MUST input your API_key as outlined below. You may also choose to create a config.py file containing your API key which you import so as to keep it secret. I have left a commented import example on line 8 in main.py.
 
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
