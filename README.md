@@ -8,7 +8,7 @@ Scripts:
 
 main.py - Here we import the Momentum_strategy class and use the tool
 
-Momentum_strategy_class.py - Contains the class which performs the analysis and function of the tool AND API KEY
+Momentum_strategy_class.py - Contains the class which performs the analysis and function of the tool.
 
 Accessory_scripts/Checking_API_Accepted_Tickers.py - Checks which tickers (stocks) are supported by the IEX API and saves them to a JSON file list_of_tickers_supported.json. This script needn’t be used but I included it for completeness so you can see where list_of_tickers_supported.json came from.
 
@@ -27,7 +27,7 @@ OUTPUT/Order_sheet_EXAMPLE.xlsx - Example output order sheet that the tool produ
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 IMPORTANT:
-The API key I use is private. It is stored in a file on my local machine and loaded at the beginning of the Momentum_strategy class in Momentum_strategy_class.py (line 22). THIS MUST BE CHANGED TO ACCEPT YOUR IEX API KEY.
+The API key I use is private. It is stored in a config.py file on my local machine and loaded in main.py. YOU MUST input your API_key as outlined below. You may also choose to create a config.py file containing your API key which you import so as to keep it secret. I have left a commented import example on line 9 in main.py.
 
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
@@ -39,8 +39,9 @@ The tool analysis two characteristics of stocks. The mean 1-Day momentum (the da
 Instructions for use (please read Description of analysis first):
 Note: All currency is USD
 
-1. Initialise the Momentum_strategy class with the amount you want to invest and the number of shares you wish to buy. E.g. my_strategy = Momentum_strategy(CASH_TO_INVEST, NUMBER_SHARES_TO_BUY)
-2. Utilise the Order_Sheet() class function like so:
+1. Input your personal API_key in a config.py file
+2. Initialise the Momentum_strategy class with the amount you want to invest and the number of shares you wish to buy. E.g. my_strategy = Momentum_strategy(CASH_TO_INVEST, NUMBER_SHARES_TO_BUY, API_KEY)
+3. Utilise the Order_Sheet() class function like so:
 
 my_strategy.Order_sheet(MOMENTUM_HIT_RATIO: float, INDEX_FILE: str, TICKER_TAG: str, OUTPUT_FILE_PATH: str, FRACTIONAL_SHARES: bool)
 
@@ -52,7 +53,7 @@ FRACTIONAL_SHARES (default: False) = Set True to allow the order of fractional s
 
 
 Example Input:
-my_strategy = Momentum_strategy(10000, 20)
+my_strategy = Momentum_strategy(10000, 20, API_KEY)
 my_strategy.Order_sheet(0.5, S&P500_Stocks.csv, 'Symbol', OUTPUT/Order_sheet_1.xlsx, False)
 
 The above code will find the 20 stocks in the S&P500 with the highest YTD mean 1-Day momentum which also has a MHR above 0.5. The code works out how many shares to buy in each stock such that each stock position has an equal share of the 10,000 USD invested. I inputted False, therefore the code only calculates the order of whole shares by rounding positions down, meaning the final positions won't all be equal in size. The example spreadsheet i included is produced form this code.
