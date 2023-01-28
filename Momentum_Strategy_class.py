@@ -54,7 +54,7 @@ class Momentum_strategy:
 
         #CHANGE <><><><><><><><><><><><><><><><><><><><><><><><>
         #Shorten for testing to reduce API requests (slow and limited number of requests on free trial)
-        Ticker_list_stripped = Ticker_list_stripped[:10]
+        # Ticker_list_stripped = Ticker_list_stripped[:10]
         #<><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
         #Create sub lists of tickers with length chunk_length so that each API batch request isn't too long
@@ -118,7 +118,7 @@ class Momentum_strategy:
 
         return dataframe
 
-    def __Create_output_spreadsheet(self, _filename, _dataframe, __Index_filename):
+    def __Create_output_spreadsheet(self, _filename, _dataframe, __Index_filename, fractional_shares):
         _dataframe = _dataframe[:self.__number_of_positions]
         __number_of_positions_remaining = len(_dataframe)
 
@@ -132,7 +132,10 @@ class Momentum_strategy:
 
         #Add number of stocks to buy to the spreadsheet
         for i in range(len(_dataframe)):
-            _dataframe.loc[i, 'Buy'] = mth.floor(position_size / _dataframe['Price'][i])
+            if not fractional_shares:
+                _dataframe.loc[i, 'Buy'] = mth.floor(position_size / _dataframe['Price'][i])
+            else:
+                _dataframe.loc[i, 'Buy'] = position_size / _dataframe['Price'][i]
 
         #Drop unnecessary columns
         _dataframe.drop(columns = ['level_0', 'index'], inplace = True)
@@ -172,18 +175,19 @@ class Momentum_strategy:
         Momentum_strategy_wb.save(Momentum_strategy_file_name)
 
 
-    def Order_Sheet(self, Minimum_1d_momentum_hit_ratio: float, Index_filename__: str, ticker_tag_: str, Output_filename: str):
+    def Order_Sheet(self, Minimum_1d_momentum_hit_ratio: float, Index_filename__: str, ticker_tag_: str, Output_filename: str, fractional_shares: bool):
 
         assert isinstance(Minimum_1d_momentum_hit_ratio, float) or isinstance(Minimum_1d_momentum_hit_ratio, int), f'Momentum hit ratio, {Minimum_1d_momentum_hit_ratio}, must be a number between 0 and 1'
         assert Minimum_1d_momentum_hit_ratio >= 0 and Minimum_1d_momentum_hit_ratio < 1, f'Momentum hit ratio, {Minimum_1d_momentum_hit_ratio}, must be a number between 0 and 1'
         assert isinstance(Index_filename__, str), f'Input stock ticker list file name must be a string'
         assert isinstance(ticker_tag_, str), f'Input stock list file ticker tag must be a string'
         assert isinstance(Output_filename, str), f'Output order sheet filename must be a string'
+        assert isinstance(fractional_shares, bool), f'The fractional shares option must be "True" or "False" for ordering fractional shares or not respectively'
 
         Ticker_strings_lst_, Ticker_list_stripped_chunked = self.__Ticker_strings_lst_(Index_filename__, ticker_tag_)
         df = self.__batch_request(Ticker_strings_lst_, Ticker_list_stripped_chunked)
         df = self.__analyse_momentum(Minimum_1d_momentum_hit_ratio, df)
-        self.__Create_output_spreadsheet(Output_filename, df, Index_filename__)
+        self.__Create_output_spreadsheet(Output_filename, df, Index_filename__, fractional_shares)
 
 
         price_list_ = list(df['Price'])
