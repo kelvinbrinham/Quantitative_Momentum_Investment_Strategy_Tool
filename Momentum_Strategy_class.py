@@ -174,8 +174,10 @@ class Momentum_strategy:
         #Save workbook
         Momentum_strategy_wb.save(Momentum_strategy_file_name)
 
+    
 
-    def Order_Sheet(self, Minimum_1d_momentum_hit_ratio: float, Index_filename__: str, ticker_tag_: str, Output_filename: str, fractional_shares = False):
+
+    def Order_Sheet(self, Minimum_1d_momentum_hit_ratio: float, Index_filename__: str, ticker_tag_: str, Output_filename = 'OUTPUT/Order_sheet.xlsx', fractional_shares = False):
 
         assert isinstance(Minimum_1d_momentum_hit_ratio, float) or isinstance(Minimum_1d_momentum_hit_ratio, int), f'Momentum hit ratio, {Minimum_1d_momentum_hit_ratio}, must be a number between 0 and 1'
         assert Minimum_1d_momentum_hit_ratio >= 0 and Minimum_1d_momentum_hit_ratio < 1, f'Momentum hit ratio, {Minimum_1d_momentum_hit_ratio}, must be a number between 0 and 1'
@@ -193,7 +195,7 @@ class Momentum_strategy:
         price_list_ = list(df['Price'])
         Buy_list_ = list(df['Buy'])
         Buy_list_length = len([x for x in Buy_list_ if not isinstance(x, str) and x > 0])
-        Capital_invested = sum([price_list_[i] * Buy_list_[i] for i in range(len(Buy_list_))])
+        Capital_invested = sum([price_list_[i] * Buy_list_[i] for i in range(len(Buy_list_)) if not isinstance(Buy_list_[i], str)])
         Capital_invested_percent = "{0:.0%}".format(Capital_invested / self.__investment)
         minimum_investment_ = min(price_list_) * self.__number_of_positions
 
