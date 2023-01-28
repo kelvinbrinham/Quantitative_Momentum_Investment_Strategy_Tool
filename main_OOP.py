@@ -20,10 +20,18 @@ API_key = linecache.getline(API_key_file_path, 10).strip()
 class Equity:
     #List of equity objects in Portfolio
     universe = []
+
+    list_of_tickers_supported_f = open(f'list_of_tickers_supported.json')
+    list_of_tickers_supported_js = js.load(list_of_tickers_supported_f)
+
+    #Create list of accepted tickers
+    API_symbol_lst = [x['symbol'] for x in list_of_tickers_supported_js]
+
     def __init__(self, ticker: str, quantity = 0):
 
         #Validate initialisation arguements
         assert quantity >= 0, f'Quantity {quantity} is negative!'
+        assert ticker in Equity.API_symbol_lst, f'This stock is not supported, please try another.'
 
         #Assign to self object
         self.__ticker = ticker
@@ -69,7 +77,3 @@ class Equity:
         initial_position_size = self.__purchase_price * self.__quantity
         return_percentage_ = (current_position_size - initial_position_size) / initial_position_size
         return "{0:.0%}".format(return_percentage_)
-
-
-
-# stock1 = Equity('AAPL', 3)
