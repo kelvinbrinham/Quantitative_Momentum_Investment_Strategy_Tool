@@ -32,14 +32,14 @@ The API key I use is private. It is stored in a config.py file on my local machi
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 Description of analysis:
-The tool analysis two characteristics of stocks. The mean 1-Day momentum (the daily percentage change in stock price) for the year to date (YTD); and, ‘Momentum Hit Ratio (MHR)’. I define MHR as the fraction of days within the YTD in which the share increased in price. This introduces a measure of the quality of momentum. The tool cuts off stocks with an MHR below a user-defined value and then picks the stocks with the highest mean 1-Day momentum. The tool then buys equal size positions in the stocks with the most high quality momentum. 
+The tool analysis two characteristics of stocks. The mean 1-Day momentum (the daily percentage change in stock price) for the year to date (YTD); and, ‘Momentum Hit Ratio (MHR)’. I define MHR as the fraction of days within the YTD in which the share increased in price. This introduces a measure of quality of momentum quality. The tool cuts off stocks with an MHR below a user-defined value and then picks the stocks with the highest mean 1-Day momentum in the YTD. The tool then buys equal size positions in the stocks with the most high quality momentum.
 
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 Instructions for use (please read Description of analysis first):
 Note: All currency is USD
 
-1. Input your personal API_key in a config.py file
+1. Input your personal API_key in a config.py file OR directly in the Momentum_strategy(10000, 20, API_KEY) class. 
 2. Initialise the Momentum_strategy class with the amount you want to invest and the number of shares you wish to buy. E.g. my_strategy = Momentum_strategy(CASH_TO_INVEST, NUMBER_SHARES_TO_BUY, API_KEY)
 3. Utilise the Order_Sheet() class function like so:
 
@@ -62,7 +62,8 @@ The above code will find the 20 stocks in the S&P500 with the highest YTD mean 1
 
 Future:
 There are many improvements I can envisage, here are just a few:
-- Increase the complexity of analysis with extra metrics
+- Add the ability for the code to execute orders rather than producing an order sheet. 
+- Increase the complexity of analysis with extra metrics such as commonly used calculations for 'high quality momentum'
 - A portfolio system using OOP which keeps track of stocks purchased and their returns etc. (although there are many apps for this of course)
 - Add extra user choice (such as 1-Month momentum etc.)
 
