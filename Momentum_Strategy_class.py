@@ -61,7 +61,7 @@ class Momentum_strategy:
         chunk_length = 100
         Ticker_list_stripped_chunked = [Ticker_list_stripped[x:x+chunk_length] for x in range(0, len(Ticker_list_stripped), chunk_length)]
 
-        #List of strings, each containing multiple comma separated tickers ('AAPL,FB,...')
+        #List of strings, each containing multiple comma separated tickers ('AAPL,FB,...') for the batch API request
         Ticker_strings_lst = []
         for i in range(len(Ticker_list_stripped_chunked)):
             Ticker_strings_lst.append(','.join(Ticker_list_stripped_chunked[i]))
@@ -80,8 +80,10 @@ class Momentum_strategy:
             API_url = f'https://cloud.iexapis.com/stable/stock/market/batch?symbols={Ticker_strings_lst[i]}&types=stats,quote,chart&token={self.__API_key}'
             #Request batch stock data
             Stock_data_js = rq.get(API_url).json()
+            #Loop over each stock
             for ticker in Ticker_strings_lst[i].split(','):
                 #Write individual data frame for each stock and add to data_df_lst
+                #Check if ticker is supported by the API
                 if ticker in Momentum_strategy.API_symbol_lst:
                     #Work out 1 year average Momentum
                     no_data_points = len(Stock_data_js[ticker]['chart']) # no. trading days in ytd
@@ -91,7 +93,7 @@ class Momentum_strategy:
                     for j in range(no_data_points):
                         percent_chg_current = Stock_data_js[ticker]['chart'][j]['changePercent']
                         avg_ytd_mom += percent_chg_current / no_data_points
-                        if percent_chg_current > 0:
+                        if percent_chg_current > 0: #I define hit ratio as number of days the stock increased in price
                             ytd_mom_hit_ratio += 1 / no_data_points
 
                     Stock_df = pd.DataFrame([[ticker, Stock_data_js[ticker]['quote']['latestPrice'],
@@ -119,14 +121,16 @@ class Momentum_strategy:
         return dataframe
 
     def __Create_output_spreadsheet(self, _filename, _dataframe, __Index_filename, fractional_shares):
+        #Cut dataframe to number of positions the user chooses to open
         _dataframe = _dataframe[:self.__number_of_positions]
         __number_of_positions_remaining = len(_dataframe)
-
+        
         if not __number_of_positions_remaining:
             raise Exception('No stocks meet the momentum criteria you requested. Try lowering the 1-Day momentum hit ratio criterion.')
-
+        
+        #Retrive name of stock index from the index file name
         index_name = __Index_filename.split('_')[0]
-
+        
         #Size of each EQUAL position
         position_size = self.__investment / __number_of_positions_remaining
 
@@ -182,8 +186,8 @@ class Momentum_strategy:
         __Momentum_strategy_ws['A4'] = f'Capital invested: {"${:.2f}".format(__Capital_invested)}; {__Capital_invested_percent} of available capital.'
 
         __Momentum_strategy_wb.save(__Output_filename)
-
-
+    
+    #NOT hidden function for user to call
     def Order_sheet(self, Minimum_1d_momentum_hit_ratio: float, Index_filename__: str, ticker_tag_: str, Output_filename = 'OUTPUT/Order_sheet.xlsx', fractional_shares = False):
 
         assert isinstance(Minimum_1d_momentum_hit_ratio, float) or isinstance(Minimum_1d_momentum_hit_ratio, int), f'Momentum hit ratio, {Minimum_1d_momentum_hit_ratio}, must be a number between 0 and 1'
@@ -198,7 +202,7 @@ class Momentum_strategy:
         df = self.__analyse_momentum(Minimum_1d_momentum_hit_ratio, df)
         self.__Create_output_spreadsheet(Output_filename, df, Index_filename__, fractional_shares)
 
-
+        
         price_list_ = list(df['Price'])
         Buy_list_ = list(df['Buy'])
         Buy_list_length = len([x for x in Buy_list_ if not isinstance(x, str) and x > 0])
